@@ -1,24 +1,33 @@
 #!/bin/bash
 
 print_title() {
-    wide=45
-    str_len=`expr length $1`
-    echo $str_len
-    syb=`expr $wide - $str_len`
-    echo $syb
-    syb=`expr $syb / 2`
-    line=
-    echo $syb
+    declare wide=45
+    declare str_len=$(expr length "$1")
+    declare line_w=$[$[wide - str_len] / 2]
 
-    while [ $syb -gt 0 ]
-    do
-        line=$line'-'
-        syb=`expr $syb - 1`
-    done
+    echo
+    if (($line_w <= 0))
+    then
+        echo -e '\e[1;31m'- '\e[0;36m'$1'\e[1;31m' -'\e[0m'
+    else
+        declare line_l
+        while (($line_w > 0))
+        do
+            line_l=$line_l'-'
+            line_w=$[line_w - 1]
+        done
 
-    echo $line
-}
+        declare line=$line_l
+        if (($[$[wide - str_len] % 2] > 0))
+        then
+            line=$line'-'
+        fi
 
+        echo -e '\e[1;31m'$line' ''\e[0;36m'$1'\e[1;31m'' '$line_l'\e[0m'
+    fi
+};
+
+print_title 'exp02'
 echo '$#' = $#
 echo '$*' = $*
 
@@ -41,7 +50,7 @@ done
 
 print_title 'for'
 dir=/tmp/
-for file in `ls $dir`
+for file in $(ls $dir)
 do
     if [ -f $dir$file ]
     then
@@ -51,3 +60,8 @@ do
         echo $file is a directory
     fi
 done
+
+print_title 'array'
+declare -a array=(gengs changxy xuejj gonglx)
+echo ${array[2]}
+echo "Today is $(date)"
