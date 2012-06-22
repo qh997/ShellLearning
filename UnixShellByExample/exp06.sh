@@ -46,3 +46,21 @@ awk 'BEGIN{OFMT="%.2f";OFS=" <-> "; print 1.2456789, 12E-2}'
 
 print_title "awk 'BEGIN{FS=":"}{printf \"The name is: %-18s  Home is:%s\\\\n\", $1, $6}' /etc/passwd"
 awk 'BEGIN{FS=":"}{printf "The name is: %-18s  Home is:%s\n", $1, $6}' /etc/passwd
+
+print_title "awk '/^[na]/{print \$1}' datafile"
+awk '/^[na]/{print $1}' datafile
+
+print_title " awk '\$5 ~ /\.[7-9]+/' datafile"
+awk '$5 ~ /\.[7-9]+/' datafile
+
+print_title "awk '{print \"Number of fields: \" NF}' datafile2"
+awk '{print "Number of fields: " NF}' datafile2
+
+print_title "awk -F: '{print \"Number fo fields: \" NF}' datafile2"
+awk -F: '{print "Number fo fields: " NF}' datafile2
+
+print_title "awk -F\"[ :]\" '{print \$1\"<=>\"\$2,\$3}' datafile2"
+awk -F"[ :]" '{print $1"<=>"$2,$3}' datafile2
+
+print_title "awk -f nawk.scl datafile"
+awk -f nawk.scl datafile

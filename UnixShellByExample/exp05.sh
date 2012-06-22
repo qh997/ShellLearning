@@ -47,7 +47,7 @@ sed -n '/^echo/,/^print_title /s/$/** EVE **/p' exp04.sh
 print_title "sed -n -e '/^echo/{h; d;}' -e '/kw/{G;p;}' exp04.sh"
 sed -n -e '/^echo/{h; d;}' -e '/kw/{G;p;}' exp04.sh
 
-print_title "sed -e '$aEND' -e '1iSTART' -e '/[wly]/d' -e '/game/cGAME' -e '/[mM]/s/$/ ***/' /etc/passwd"
+print_title "sed -e '\$aEND' -e '1iSTART' -e '/[wly]/d' -e '/game/cGAME' -e '/[mM]/s/\$/ ***/' /etc/passwd"
 sed -e '$aEND' -e '1iSTART' -e '/[wly]/d' -e '/game/cGAME' -e '/[mM]/s/$/ ***/' /etc/passwd
 
 print_title "sed '/^man/s/\(\([a-zA-Z0-9]*:\)\{3\}\)[0-9]*/\1[000]/p' -n /etc/passwd"
