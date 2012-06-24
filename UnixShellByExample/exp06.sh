@@ -64,3 +64,25 @@ awk -F"[ :]" '{print $1"<=>"$2,$3}' datafile2
 
 print_title "awk -f nawk.scl datafile"
 awk -f nawk.scl datafile
+
+print_title "sed 和 awk 范围操作符的差别"
+
+print_title "awk '/Joel/,/Joel/' datafile"
+awk '/Joel/,/Joel/' datafile
+print_title "sed -n '/Joel/,/Joel/p' datafile"
+sed -n '/Joel/,/Joel/p' datafile
+
+print_title "awk '\$6 > .9' datafile"
+awk '$6 > .9' datafile
+
+print_title "awk '\$3 ~ /^Susan/{print \"Percentage: \" \$6 + .2 \" Volume: \" \$8}' datafile"
+awk '$3 ~ /^Susan/{print "Percentage: " $6 + .2 " Volume: " $8}' datafile
+
+print_title "awk '$3 == \"Chris\"{\$3 = \"Christian\"; print}' datafile"
+awk '$3 == "Chris"{$3 = "Christian"; print}' datafile
+
+print_title "awk '\$3 ~ /Val/ {wage = \$5 \* \$7; print wage}' datafile"
+awk '$3 ~ /Val/ {wage = $5 * $7; print wage}' datafile
+
+print_title "awk  -F: '\$1 == \"Sheri Watson\"{print NR, \$1, \$2, \$NF}' datafile2"
+awk  -F: '$1 == "Sheri Watson"{print NR, $1, $2, $NF}' datafile2
