@@ -1,7 +1,7 @@
 #!/bin/bash
 
 print_title() {
-    declare wide=45
+    declare wide=65
     declare str_len=$(expr length "$1")
     declare line_w=$[$[wide - str_len] / 2]
 
@@ -44,7 +44,7 @@ awk 'BEGIN{FS=":"}/gengs/{print "\tHave a nice day, " $1 "!"}' /etc/passwd
 print_title "awk 'BEGIN{OFMT=\"%.2f\";OFS=\" <-> \"; print 1.2456789, 12E-2}'"
 awk 'BEGIN{OFMT="%.2f";OFS=" <-> "; print 1.2456789, 12E-2}'
 
-print_title "awk 'BEGIN{FS=":"}{printf \"The name is: %-18s  Home is:%s\\\\n\", $1, $6}' /etc/passwd"
+print_title "awk 'BEGIN{FS=":"}{printf \"The name is: %-18s  Home is:%s\\\\n\", \$1, \$6}' /etc/passwd"
 awk 'BEGIN{FS=":"}{printf "The name is: %-18s  Home is:%s\n", $1, $6}' /etc/passwd
 
 print_title "awk '/^[na]/{print \$1}' datafile"
@@ -65,7 +65,7 @@ awk -F"[ :]" '{print $1"<=>"$2,$3}' datafile2
 print_title "awk -f nawk.scl datafile"
 awk -f nawk.scl datafile
 
-print_title "sed 和 awk 范围操作符的差别"
+echo -e "\n\e[0;33m++++ sed 和 awk 范围操作符的差别 ++++\e[0m"
 
 print_title "awk '/Joel/,/Joel/' datafile"
 awk '/Joel/,/Joel/' datafile
@@ -86,3 +86,44 @@ awk '$3 ~ /Val/ {wage = $5 * $7; print wage}' datafile
 
 print_title "awk  -F: '\$1 == \"Sheri Watson\"{print NR, \$1, \$2, \$NF}' datafile2"
 awk  -F: '$1 == "Sheri Watson"{print NR, $1, $2, $NF}' datafile2
+
+print_title "awk '{print \$3, \$4 | \"sort -r +1 -2 +0 -1\"}' datafile"
+awk '{print $3, $4 | "sort -r +1 -2 +0 -1"}' datafile
+
+print_title "awk '/^north/{count++;}END{print \"Total : \" count}' datafile"
+awk '/^north/{count++;}END{print "Total : " count}' datafile
+
+print_title "awk -f awk.sc3 datafile"
+awk -f awk.sc3 datafile
+
+print_title "awk '{if (\$8 >= 20) print \$1 \" Too high\"; else print \"OK\"}' datafile"
+awk '{if ($8 >= 20) print $1 " Too high"; else print "OK"}' datafile
+
+print_title "awk '{if (\$8 >= 20) {count++; print \$1 \" Too high\";}else{print \$2 \" is OK\"}}END{print \"Totle : \" count}' datafile"
+awk '{if ($8 >= 20) {count++; print $1 " Too high";}else{print $2 " is OK"}}END{print "Totle : " count}' datafile
+
+print_title "awk '{if (\$1 ~ /Susan/) print; else next; print \"Found Susan!\"}' datafile2"
+awk '{if ($1 ~ /Susan/) print; else next; print "Found Susan!"}' datafile2
+
+echo -e "\n\e[0;33m++++ 数组 ++++\e[0m"
+
+print_title "awk '{name[x++] = \$4} END{for (i = 0; i < NR; i++) print i, name[i]}' datafile"
+awk '{name[x++] = $4} END{for (i = 0; i < NR; i++) print i, name[i]}' datafile
+
+print_title "awk 'BEGIN{OFS=\"\\\\t\"}{location[\$4] = \$1} END{for (l in location) print l, location[l]}' datafile"
+awk 'BEGIN{OFS="\t"}{location[$4] = $1} END{for (l in location) print l, location[l]}' datafile
+
+print_title "awk '{count[\$7]++} END{for (n in count) print n, count[n]}' datafile"
+awk '{count[$7]++} END{for (n in count) print n, count[n]}' datafile
+
+print_title "awk 'BEGIN{split(\"25/6/2012\", date, \"/\"); print \"Year : \" date[3]}' datafile"
+awk 'BEGIN{split("25/6/2012", date, "/"); print "Year : " date[3]}' datafile
+
+print_title "awk 'BEGIN{srand()};{print int(rand() * 10)}' datafile"
+awk 'BEGIN{srand()};{print int(rand() * 10)}' datafile
+
+print_title "awk 'BEGIN{FS = \"\n\"; RS = \"\"; ORS = \"\n\n\"}{print NR, \$1, \$2, \$3, \$4}' checkbook"
+awk 'BEGIN{FS = "\n"; RS = ""; ORS = "\n\n"}{print NR, $1, $2, $3, $4}' checkbook
+
+print_title "awk 'BEGIN{\"date\" | getline d; split(d, mon); print mon[2]}' datafile"
+awk 'BEGIN{"date" | getline d; split(d, mon); print mon[2]}' datafile
