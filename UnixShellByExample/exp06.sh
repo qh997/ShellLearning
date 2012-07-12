@@ -122,7 +122,7 @@ awk 'BEGIN{split("25/6/2012", date, "/"); print "Year : " date[3]}' datafile
 print_title "awk 'BEGIN{srand()};{print int(rand() * 10)}' datafile"
 awk 'BEGIN{srand()};{print int(rand() * 10)}' datafile
 
-print_title "awk 'BEGIN{FS = \"\n\"; RS = \"\"; ORS = \"\n\n\"}{print NR, \$1, \$2, \$3, \$4}' checkbook"
+print_title "awk 'BEGIN{FS = \"\\n\"; RS = \"\"; ORS = \"\\n\\n\"}{print NR, \$1, \$2, \$3, \$4}' checkbook"
 awk 'BEGIN{FS = "\n"; RS = ""; ORS = "\n\n"}{print NR, $1, $2, $3, $4}' checkbook
 
 print_title "awk 'BEGIN{\"date\" | getline d; split(d, mon); print mon[2]}' datafile"
