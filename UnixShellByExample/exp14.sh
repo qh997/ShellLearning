@@ -1,9 +1,9 @@
 #!/bin/bash
 
-print_title() {
-    declare -i wide=85
-    declare -i str_len=$(expr length "$1")
-    declare -i line_w=$[$[$wide - $str_len] / 2]
+function print_title {
+    wide=72
+    str_len=${2:-$(expr length "$1")}
+    line_w=$(((wide - str_len) / 2))
 
     echo
     if (($line_w <= 0))
@@ -23,119 +23,134 @@ print_title() {
             line=$line'-'
         fi
 
-        echo -e '\e[1;31m'$line' ''\e[0;36m'$1'\e[1;31m'' '$line_l'\e[0m'
+        echo -e "\e[1;31m${line} \e[0;36m${1}\e[1;31m ${line_l}\e[0m"
     fi
 }
 
-print_title 'exp14'
+function print_cmd {
+    echo
+    echo -e "\e[0;35mCOMMAND > \e[1;32m${1}\e[0;35m <\e[0m"
+}
 
-print_title 'bash --version'
-bash --version
+print_title "Chapter 14 bash shell 编程" 26
 
-print_title 'echo $BASH_VERSION'
+print_cmd "echo \$BASH_VERSION"
 echo $BASH_VERSION
 
-print_title 'Show sh files'
-for shfile in ./*.sh; do
-    echo $shfile' in this dir'
+print_title "算术运算" 8
+
+print_cmd "declare -i num; num=(2+3)*7; echo \$num"
+declare -i num
+num=(2+3)*7
+echo $num
+
+print_cmd "unset num; num=(2+3)*7; echo \$num"
+unset num
+num=(2+3)*7
+echo $num
+
+print_cmd "let \"num = 5\"; let \"num = num * 9\" echo \$num"
+let "num = 5"
+let "num = num * 9"
+echo $num
+
+print_title "浮点运算" 8
+
+print_cmd "num=\$(echo \"scale=3; 997 / 113\" | bc); echo \$num"
+num=$(echo "scale=3; 997 / 113" | bc)
+echo $num
+
+print_cmd "product=\$(awk -v x=2.25 -v y=3.133 'BEGIN{printf\"%.2f\\\\n\", x * y}'); echo $product"
+product=$(awk -v x=2.25 -v y=3.133 'BEGIN{printf"%.2f\n", x * y}')
+echo $product
+
+print_title "位置参量和命令行参数" 20
+
+print_cmd "echo \$#; echo \$0"
+echo $#
+echo $0
+
+print_title "set 命令与位置参量" 18
+
+print_cmd "set cxy xjj gun; echo \$*; echo \$#"
+set cxy xjj gun
+echo $*
+echo $#
+
+print_cmd "for gl in \$*; do echo \$gl; done"
+for gl in $*; do
+    echo $gl
 done
 
-print_title "awk -v x=2.45 -v y=3.123 'BEGIN{printf \"%.2f\\\\n\", x*y}'"
-awk -v x=2.45 -v y=3.123 'BEGIN{printf "%.2f\n", x*y}'
+print_cmd "set \"c xi ye\" \"x ja ji\""
+set "c xi ye" "x ja ji"
 
-for par in $*; do
-    echo $#:$par
+print_cmd "for i in \$*; do echo $i; done"
+for i in $*; do
+    echo $i
 done
 
-set Xuejj Changxy
-for par in $*; do
-    echo $#:$par
+print_cmd "for i in \"\$*\"; do echo $i; done"
+for i in "$*"; do
+    echo $i
 done
 
-set 'xxx jjj rrr' 'ccc xxx yyy'
-
-print_title "for mg in \$*; do echo $mg; done"
-for mg in $*; do
-    echo $mg
+print_cmd "for i in \$@; do echo $i; done"
+for i in $@; do
+    echo $i
 done
 
-print_title "for mg in \"\$*\"; do echo $mg; done"
-for mg in "$*"; do
-    echo $mg
+print_cmd "for i in \"\$@\"; do echo $i; done"
+for i in "$@"; do
+    echo $i
 done
 
-print_title "for mg in \$@; do echo $mg; done"
-for mg in $@; do
-    echo $mg
-done
+print_title "test 命令" 9
 
-print_title "for mg in \"\$@\"; do echo $mg; done"
-for mg in "$@"; do
-    echo $mg
-done
-
-print_title "grep \"bash$\" /etc/passwd; echo \$?"
-grep "bash$" /etc/passwd
+print_cmd "name=qiuqing; [[ \"\$name\" =~ ^qiu.*ing ]]; echo \$?"
+name="qiuqing xuejiajia"
+[[ $name =~ ^qiu.*ing ]]
 echo $?
 
-print_title "name=Tom; test \$name != Tom; echo \$?"
-name=Tom
-test $name != Tom
+print_cmd "[[ \$name =~ (jia)+ ]]; echo \$?"
+[[ $name =~ (jia)+ ]]
 echo $?
 
-print_title "[ \$name = Tom ]; echo \$?"
-[ $name = Tom ]
-echo $?
+print_title "let 命令" 8
 
-print_title "name=gengs; friend=changxy; [[ \$name == [Gg]engs ]]; echo \$?"
-name=gengs; friend=changxy
-[[ $name == [Gg]engs ]]
-echo $?
-
-print_title "x=2; y=3; (( x > 2 )); echo \$?"
+print_cmd "x=2; y=3"
 x=2; y=3
-(( x > 2 ))
+
+print_cmd "((x > 2)); echo \$?"
+((x > 2))
 echo $?
 
-print_title "x=2; y=3; (( x <= 2 )); echo \$?"
-(( x <= 2 ))
+print_cmd "((x == 2 && y == 3)); echo \$?"
+((x == 2 && y == 3))
 echo $?
 
-print_title "(( x > 2 || y < 2 )); echo \$?"
-(( x > 2 || y < 2 ))
+print_cmd "((x > 2 || y < 3)); echo \$?"
+((x > 2 || y < 3))
 echo $?
 
-print_title "if grep -i 'changxy' /etc/passwd;"
-if grep -i 'changxy' /etc/passwd; then
-    echo 'Found xy'
-else
-    echo 'Where is xy'
-fi
+print_title "if 命令 null 命令" 17
 
-print_title "name=; if [ -z \$name ]; then echo 'Name is empty!'; fi"
-name=
-if [ -z "$name" ]; then
-    echo 'Name is empty!'
-fi
-
-print_title "user=\`id | awk '{print \$1}' | awk -F'=' '{print \$2}' | sed -e 's#.*(\([^()]*\)).*#\1#'\`; echo \$user"
-user=`id | awk '{print $1}' | awk -F'=' '{print $2}' | sed -e 's#.*(\([^()]*\)).*#\1#'`
-echo $user
-
-print_title "if grep 'gengs' datafile >& /dev/null; then :; else echo \"gengs not found.\"; fi"
+print_cmd "if grep 'gengs' datafile >& /dev/null; then :; else echo \"gengs not found.\"; fi"
 if grep 'gengs' datafile >& /dev/null; then
     :
 else
     echo "gengs not found."
 fi
 
-print_title "DATAFILE=; : ${DATAFILE:=datafile}; : ${DATAFILE:=xxxxxxxx}; echo $DATAFILE"
+print_cmd "DATAFILE=; : \${DATAFILE:=datafile}; : \${DATAFILE:=xxxxxxxx}; echo \$DATAFILE"
 DATAFILE=
 : ${DATAFILE:=datafile}
 : ${DATAFILE:=xxxxxxxx}
 echo $DATAFILE
 
-print_title "name=cxy case \$name in"
+print_title "case 命令" 9
+
+print_cmd "name=cxy; case \$name in gs) echo \$name:master;; ?[Xx][Yy]) echo \$name:salver;; esac"
 name=cxy
 case $name in
     gs)
@@ -151,60 +166,57 @@ case $name in
     ;;
 esac
 
-print_title "names=(gengs changxy xuejj gonglx)"
-print_title "for n in \$names; do echo \"Hi $n\"; done"
-names=(gengs changxy xuejj gonglx)
+print_title "for 命令" 8
+
+print_cmd "names=\"gengs changxy xuejj gonglx\""
+names="gengs changxy xuejj gonglx"
+
+print_cmd "for n in \$names; do echo \"Hi $n\"; done"
 for n in $names; do
     echo "Hi $n"
 done
 
-print_title "echo \${#names[@]}; echo \${#names[*]}"
-echo ${#names[@]}
-echo ${#names[*]}
+print_cmd "names=(gengs changxy xuejj gonglx)"
+names=(gengs changxy xuejj gonglx)
 
-print_title "for ((i=0;i<\${#names[@]};i++)); do echo \"Hello \${names[\$i]}\"; done"
-for ((i=0;i<${#names[@]};i++)); do
-    echo "Hello ${names[$i]}"
+print_cmd "for n in \${names[*]}; do echo \"Hi $n\"; done"
+for n in ${names[*]}; do
+    echo "Hi $n"
 done
 
-print_title "num=0; while (( \$num < 10 )); do echo -n \"\$num \"; let num+=1; done; echo \$num"
-num=0
-while (( $num < 10 )); do
-    echo -n "$num "
-    let num+=1
+print_cmd "names=(\"geng shuang\" \"chang xing ye\" \"xue jia jia\" \"gong li xin\")"
+names=("geng shuang" "chang xing ye" "xue jia jia" "gong li xin")
+
+print_cmd "for n in \"\${names[@]}\"; do echo \"Hi \$n\"; done"
+for n in "${names[@]}"; do
+    echo "Hi $n"
 done
-echo $num
 
-#print_title "PS3=\"Select a program to execute: \"; select program in 'ls -F' pwd date break; do $program; done"
-#PS3="Select a program to execute: "
-#select program in 'ls -F' pwd date break; do
-#    $program
-#    REPLY=
-#done
+print_title "while 命令 shift 命令" 21
 
-print_title "set a b c d e f g; while [[ \$# -gt 0 ]]; do echo \$*; shift; done"
+print_cmd "set a b c d e f g; while [[ \$# -gt 0 ]]; do echo \$*; shift; done"
 set a b c d e f g
 while [[ $# -gt 0 ]]; do
     echo $*
     shift
 done
 
-print_title "set \$(date); while ((\$# > 0)); do echo \$1; shift; done"
-set $(date)
-while (($# > 0)); do
-    echo $1
-    shift
-done
+print_title "IO 重定向" 9
 
-print_title "count=1; cat datafile | while read line; do echo -e \$count\"\\\\t\"\$line; ((count++)); done"
-count=1
+print_cmd "cat datafile | while read line; do echo -e \$((++count))\"\\\\t\"\$line; done"
 cat datafile | while read line; do
-    echo -e $count"\t"$line
-    ((count++))
+    echo -e $((++count))"\t"$line
 done
 
-print_title "names=changxy:xuejj:guon:li.t; oldifs=\$IFS; IFS=\":\"; for person in \$names; do echo Hi \$person; done; IFS=\$oldifs"
-names=changxy:xuejj:guon:li.t
+print_cmd "for i in 7 9 2 11 3 15 6; do echo \$i; done | sort -n"
+for i in 7 9 2 11 3 15 6; do
+    echo $i
+done | sort -n
+
+print_title "IFS 和循环" 10
+
+print_cmd "names=changxy:xuejj:guon:li.t; oldifs=\$IFS; IFS=\":\"; for person in \$names; do echo Hi \$person; done; IFS=\$oldifs"
+names='changxy:xuejj:guon:li.t'
 oldifs=$IFS
 IFS=":"
 for person in $names; do
@@ -212,36 +224,10 @@ for person in $names; do
 done
 IFS=$oldifs
 
-print_title "echo \$(square 5)"
-square() {
-    echo $1 \* $1 = $(($1 * $1))
+print_title "函数" 4
+
+print_cmd "square 997"
+function square {
+    echo $(($1 * $1))
 }
-square 997
-
-print_title "fruit=peach; echo \${fruit:-plum}"
-fruit=peacheachachchh
-echo ${fruit:-plum}
-
-print_title "echo \${newfruit:-plum}"
-echo ${newfruit:-plum}
-
-print_title "echo \${fruit:2}"
-echo ${fruit:2}
-
-print_title "echo \${fruit:2:1}"
-echo ${fruit:2:1}
-
-print_title "echo \${fruit%ch*}"
-echo ${fruit%ch*}
-
-print_title "echo \${fruit%%ch*}"
-echo ${fruit%%ch*}
-
-print_title "echo \${fruit#ch*}"
-echo ${fruit#*ch}
-
-print_title "echo \${fruit##ch*}"
-echo ${fruit##*ch}
-
-print_title "echo \${#fruit}"
-echo ${#fruit}
+echo $(square 997)

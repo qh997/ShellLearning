@@ -1,9 +1,9 @@
 #!/bin/bash
 
-print_title() {
-    declare wide=45
-    declare str_len=$(expr length "$1")
-    declare line_w=$[$[wide - str_len] / 2]
+function print_title {
+    wide=72
+    str_len=${2:-$(expr length "$1")}
+    line_w=$(((wide - str_len) / 2))
 
     echo
     if (($line_w <= 0))
@@ -23,32 +23,37 @@ print_title() {
             line=$line'-'
         fi
 
-        echo -e '\e[1;31m'$line' ''\e[0;36m'$1'\e[1;31m'' '$line_l'\e[0m'
+        echo -e "\e[1;31m${line} \e[0;36m${1}\e[1;31m ${line_l}\e[0m"
     fi
 }
 
-print_title 'exp05'
+function print_cmd {
+    echo
+    echo -e "\e[0;35mCOMMAND > \e[1;32m${1}\e[0;35m <\e[0m"
+}
 
-print_title "sed -n '/xy/p' *"
+print_title 'Chapter 5 流编辑器 sed' 23
+
+print_cmd "sed -n '/xy/p' *"
 sed -n '/xy/p' *
 
-print_title "ps | sed '1,3d'"
+print_cmd "ps | sed '1,3d'"
 ps | sed '1,3d'
 
-print_title "sed -e '30,$d' -e 's/^ *//' -e 's/ *$//' -e '/^$/d' exp04.sh"
-sed -e '30,$d' -e 's/^ *//' -e 's/ *$//' -e '/^$/d' exp04.sh
+print_cmd "sed -e '4,\$d' -e 's/^ *//' -e 's/ *\$//' -e '/^\$/d' -e 's/  */ /g' datafile"
+sed -e '4,$d' -e 's/^ *//' -e 's/ *$//' -e '/^$/d' -e 's/  */ /g' datafile
 
-print_title "date | sed -n 's/[0-9][0-9]*/[&]/gp'"
+print_cmd "date | sed -n 's/[0-9][0-9]*/[&]/gp'"
 date | sed -n 's/[0-9][0-9]*/[&]/gp'
 
-print_title "sed -n '/^echo/,/^print_title /s/$/** EVE **/p' exp04.sh"
-sed -n '/^echo/,/^print_title /s/$/** EVE **/p' exp04.sh
+print_cmd "sed -n '/^southern/,/^eastern/s/\$/** EVE **/p' datafile"
+sed -n '/^southern/,/^eastern/s/$/** EVE **/p' datafile
 
-print_title "sed -n -e '/^echo/{h; d;}' -e '/kw/{G;p;}' exp04.sh"
-sed -n -e '/^echo/{h; d;}' -e '/kw/{G;p;}' exp04.sh
+print_cmd "sed -e '/WE/{h; d;}' -e '/CT/{G;}' datafile"
+sed -e '/WE/{h; d;}' -e '/CT/{G;}' datafile
 
-print_title "sed -e '\$aEND' -e '1iSTART' -e '/[wly]/d' -e '/game/cGAME' -e '/[mM]/s/\$/ ***/' /etc/passwd"
+print_cmd "sed -e '\$aEND' -e '1iSTART' -e '/[wly]/d' -e '/game/cGAME' -e '/[mM]/s/\$/ ***/' /etc/passwd"
 sed -e '$aEND' -e '1iSTART' -e '/[wly]/d' -e '/game/cGAME' -e '/[mM]/s/$/ ***/' /etc/passwd
 
-print_title "sed '/^man/s/\(\([a-zA-Z0-9]*:\)\{3\}\)[0-9]*/\1[000]/p' -n /etc/passwd"
-sed '/^man/s/\(\([a-zA-Z0-9]*:\)\{3\}\)[0-9]*/\1[000]/p' -n /etc/passwd
+print_cmd "sed -n '/^man/s/\(\([a-zA-Z0-9]*:\)\{3\}\)[0-9]*/\1[000]/p' /etc/passwd"
+sed -n '/^man/s/\(\([a-zA-Z0-9]*:\)\{3\}\)[0-9]*/\1[000]/p' /etc/passwd
