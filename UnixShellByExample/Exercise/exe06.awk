@@ -1,3 +1,5 @@
+#!/usr/bin/awk -f
+
 BEGIN {
     FS = ":";
 
@@ -41,7 +43,7 @@ END {
         get_center_space("Mar", width["month"])"Mar",
         get_center_space("Total Donated", width["total"])"Total Donated");
 
-    width["row"] = length(title_str) + 5;
+    width["row"] = length(title_str) + 3;
 
     split(person_max["name"], thksname, " ");
     thanks_str = "***THANKS "thksname[1]"***";

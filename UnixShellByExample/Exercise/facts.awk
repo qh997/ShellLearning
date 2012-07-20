@@ -1,3 +1,5 @@
+#!/usr/bin/awk -f
+
 BEGIN {
     FS = ":";
     result1 = "Savage:\n";

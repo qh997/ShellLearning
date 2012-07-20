@@ -1,3 +1,5 @@
+#!/usr/bin/awk -f
+
 BEGIN {
     FS = ":";
     printf "\n%53s\n", "***CAMPAIGN 1998 CONTRIBUTIONS***";

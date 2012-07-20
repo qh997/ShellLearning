@@ -1,3 +1,5 @@
+#!/usr/bin/awk -f
+
 BEGIN {
     printf "Please input a month : ";
     getline input < "/dev/tty";

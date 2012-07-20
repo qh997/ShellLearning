@@ -55,8 +55,8 @@ print_cmd "sed -n '/:1[12]\/[[:digit:]]*\/[[:digit:]]*:/p' databook"
 sed -n '/:1[12]\/[[:digit:]]*\/[[:digit:]]*:/p' databook
 
 print_title "在以 Fred 开头的各行末尾加上三颗星" 34
-print_cmd "sed '/^Fred/s/$/***/p' databook"
-sed '/^Fred/s/$/***/p' databook
+print_cmd "sed '/^Fred/s/$/***/' databook"
+sed '/^Fred/s/$/***/' databook
 
 print_title "将所有包含 Jose 的行替换为 JOSE HAS RETIRED" 43
 print_cmd "sed '/Jose/s/.*/JOSE HAS RETIRED/' databook"

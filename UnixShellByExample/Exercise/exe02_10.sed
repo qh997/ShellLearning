@@ -1,3 +1,5 @@
+#!/bin/sed -f
+
 1i\
 PERSONNEL FILE
 /500$/d
