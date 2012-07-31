@@ -50,7 +50,7 @@ df | awk '$3 > 200'
 print_cmd "date | awk '{print \"Month: \" \$2 \"\\\\nYear: \" \$6}'"
 date | awk '{print "Month: " $2 "\nYear: " $6}'
 
-print_title "格式化输出"
+print_title "格式化输出" 10
 
 print_cmd "awk 'BEGIN{FS=\":\"}/gengs/{print \"\\\\tHave a nice day, \" \$1 \"!\"}' /etc/passwd"
 awk 'BEGIN{FS=":"}/gengs/{print "\tHave a nice day, " $1 "!"}' /etc/passwd

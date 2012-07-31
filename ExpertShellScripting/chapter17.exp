@@ -1,0 +1,11 @@
+#!/usr/bin/expect -f
+
+spawn ./chapter17_01.sh
+
+expect "*Name*" {send "gengs\r"}
+
+expect "*gtok*"
+send "changxy\r"
+
+expect eof
+#interact

@@ -14,9 +14,9 @@ function find_process_tree {
         local line_ppid=${line_ppid%%:*}
         local line_cmd=${line#*:*:}
 
-        if (( $line_ppid == $proc_id )); then
+        if (($line_ppid == $proc_id)); then
             ((sub_proc_count--))
-            if (( $sub_proc_count )); then
+            if (($sub_proc_count)); then
                 echo "${space}|\\"
                 echo "${space}| $line_pid $line_cmd"
                 find_process_tree $line_pid "${space}| "
